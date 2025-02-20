@@ -29,11 +29,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    
     'rest_framework',
     'rest_framework_simplejwt',
     'products',
     'orders',
     'users',
+     'drf_yasg',
+    
 ]
 
 MIDDLEWARE = [
@@ -95,9 +98,7 @@ DATABASES = {
 #}
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-ALLOWED_HOSTS = ["https://sevko-backend-23d670db884f.herokuapp.com/"
-]
+ALLOWED_HOSTS = ['sevko-backend-23d670db884f.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
