@@ -67,39 +67,36 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'markdcommerce.wsgi.application'
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
 
 # Database
+#DATABASES = {
+   # 'default': {
+    #    'ENGINE': 'django.db.backends.postgresql',
+       # 'NAME': os.environ.get('DB_NAME'),
+       # 'USER': os.environ.get('DB_USER'),
+       # 'PASSWORD': os.environ.get('DB_PASSWORD'),
+       # 'HOST': os.environ.get('DB_HOST'),
+       # 'PORT': os.environ.get('DB_PORT'),
+   # }
+#}
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    }
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
+#DATABASES = {
+   # 'default': {
+       # 'ENGINE': 'django.db.backends.mysql',
+        #'NAME': 'cecil254$default',
+        #'USER': 'cecil254',
+       # 'PASSWORD': 'Inara@2023',
+       # 'HOST': 'cecil254.mysql.pythonanywhere-services.com',
 
+   # }
+#}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-ALLOWED_HOSTS = [
+ALLOWED_HOSTS = ["cecil254.pythonanywhere.com"
 ]
 
 
@@ -185,3 +182,4 @@ LOGGING = {
 }
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+django_heroku.settings(locals())
