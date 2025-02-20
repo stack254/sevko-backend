@@ -79,17 +79,20 @@ WSGI_APPLICATION = 'markdcommerce.wsgi.application'
        # 'PORT': os.environ.get('DB_PORT'),
    # }
 #}
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cecil254$default',
-        'USER': 'cecil254',
-        'PASSWORD': 'Inara@2023',
-        'HOST': 'cecil254.mysql.pythonanywhere-services.com',
-
-    }
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
+
+#DATABASES = {
+   # 'default': {
+       # 'ENGINE': 'django.db.backends.mysql',
+        #'NAME': 'cecil254$default',
+        #'USER': 'cecil254',
+       # 'PASSWORD': 'Inara@2023',
+       # 'HOST': 'cecil254.mysql.pythonanywhere-services.com',
+
+   # }
+#}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -179,3 +182,4 @@ LOGGING = {
 }
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+django_heroku.settings(locals())
