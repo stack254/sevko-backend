@@ -95,15 +95,6 @@ DATABASES = {
     }
 }
 
-# Update database configuration from $DATABASE_URL if available
-if DATABASE_URL := os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=600,
-        ssl_require=True
-    )
-else:
-    print("WARNING: DATABASE_URL not found. Using default database configuration.")
 
 
 CORS_ALLOW_ALL_ORIGINS = True
