@@ -4,7 +4,7 @@ from corsheaders.defaults import default_headers
 from datetime import timedelta
 from dotenv import load_dotenv
 import dj_database_url
-import django_heroku
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -29,14 +29,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    
     'rest_framework',
     'rest_framework_simplejwt',
     'products',
     'orders',
     'users',
-     'drf_yasg',
-    
 ]
 
 MIDDLEWARE = [
@@ -72,19 +69,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'markdcommerce.wsgi.application'
 
 # Database
-#DATABASES = {
-   # 'default': {
-    #    'ENGINE': 'django.db.backends.postgresql',
-       # 'NAME': os.environ.get('DB_NAME'),
-       # 'USER': os.environ.get('DB_USER'),
-       # 'PASSWORD': os.environ.get('DB_PASSWORD'),
-       # 'HOST': os.environ.get('DB_HOST'),
-       # 'PORT': os.environ.get('DB_PORT'),
-   # }
-#}
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    'default': {
+      'ENGINE': 'django.db.backends.postgresql',
+       'NAME': os.environ.get('DB_NAME'),
+       'USER': os.environ.get('DB_USER'),
+       'PASSWORD': os.environ.get('DB_PASSWORD'),
+       'HOST': os.environ.get('DB_HOST'),
+       'PORT': os.environ.get('DB_PORT'),
+    }
 }
+
 
 #DATABASES = {
    # 'default': {
@@ -96,15 +91,12 @@ DATABASES = {
 
    # }
 #}
-
-if 'DATABASE_URL' not in os.environ:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 CORS_ALLOW_ALL_ORIGINS = True
-ALLOWED_HOSTS = ['sevko-backend-23d670db884f.herokuapp.com', 'localhost', '127.0.0.1']
+
+ALLOWED_HOSTS = [
+]
 
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
@@ -186,14 +178,6 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'WARNING',
     },
-    'loggers': {
-        'django.request': {
-            'handlers': ['console'],
-            'level': 'ERROR',  # Change this from WARNING to ERROR
-            'propagate': False,
-        },
-    },
 }
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-django_heroku.settings(locals())
