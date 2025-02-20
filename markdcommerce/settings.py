@@ -86,27 +86,25 @@ CORS_ALLOW_METHODS = [
 # Database
 DATABASES = {
     'default': {
-     'ENGINE': 'django.db.backends.postgresql',
-      'NAME': os.environ.get('DB_NAME'),
-      'USER': os.environ.get('DB_USER'),
-      'PASSWORD': os.environ.get('DB_PASSWORD'),
-      'HOST': os.environ.get('DB_HOST'),
-       'PORT': os.environ.get('DB_PORT'),
-   }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+    }
 }
 
+# Update database configuration from $DATABASE_URL if available
+if DATABASE_URL := os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,
+        ssl_require=True
+    )
+else:
+    print("WARNING: DATABASE_URL not found. Using default database configuration.")
 
-#DATABASES = {
-   # 'default': {
-       # 'ENGINE': 'django.db.backends.mysql',
-        #'NAME': 'cecil254$default',
-        #'USER': 'cecil254',
-       # 'PASSWORD': 'Inara@2023',
-       # 'HOST': 'cecil254.mysql.pythonanywhere-services.com',
-
-   # }
-#}
-db_from_env = dj_database_url.config(conn_max_age=600)
 
 CORS_ALLOW_ALL_ORIGINS = True
 
