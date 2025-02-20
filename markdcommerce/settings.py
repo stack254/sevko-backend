@@ -67,13 +67,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'markdcommerce.wsgi.application'
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -84,16 +78,16 @@ CORS_ALLOW_METHODS = [
 ]
 
 # Database
-#DATABASES = {
-    #'default': {
-     # 'ENGINE': 'django.db.backends.postgresql',
-      # 'NAME': os.environ.get('DB_NAME'),
-      # 'USER': os.environ.get('DB_USER'),
-      # 'PASSWORD': os.environ.get('DB_PASSWORD'),
-      # 'HOST': os.environ.get('DB_HOST'),
-      # 'PORT': os.environ.get('DB_PORT'),
-   # }
-#}
+DATABASES = {
+    'default': {
+     'ENGINE': 'django.db.backends.postgresql',
+      'NAME': os.environ.get('DB_NAME'),
+      'USER': os.environ.get('DB_USER'),
+      'PASSWORD': os.environ.get('DB_PASSWORD'),
+      'HOST': os.environ.get('DB_HOST'),
+       'PORT': os.environ.get('DB_PORT'),
+   }
+}
 
 
 #DATABASES = {
@@ -106,7 +100,8 @@ CORS_ALLOW_METHODS = [
 
    # }
 #}
-db_from_env = dj_database_url.config(conn_max_age=600)
+db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'].update(db_from_env)
 
 CORS_ALLOW_ALL_ORIGINS = True
 
