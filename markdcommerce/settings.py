@@ -4,7 +4,7 @@ from corsheaders.defaults import default_headers
 from datetime import timedelta
 from dotenv import load_dotenv
 import dj_database_url
-
+import django_heroku
 
 # Load environment variables from .env file
 load_dotenv()
