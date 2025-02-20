@@ -97,6 +97,12 @@ DATABASES = {
    # }
 #}
 
+if 'DATABASE_URL' not in os.environ:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+
 CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['sevko-backend-23d670db884f.herokuapp.com', 'localhost', '127.0.0.1']
 
