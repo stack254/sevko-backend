@@ -96,7 +96,7 @@ DATABASES = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-ALLOWED_HOSTS = ["cecil254.pythonanywhere.com"
+ALLOWED_HOSTS = ["https://sevko-backend-23d670db884f.herokuapp.com/"
 ]
 
 
