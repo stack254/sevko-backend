@@ -82,7 +82,11 @@ WSGI_APPLICATION = 'markdcommerce.wsgi.application'
    # }
 #}
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 
@@ -188,3 +192,7 @@ LOGGING = {
         'level': 'WARNING',
     },
 }
+
+
+db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'].update(db_from_env)
