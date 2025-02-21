@@ -1,9 +1,10 @@
-from pathlib import Path
 import os
+from pathlib import Path
 from corsheaders.defaults import default_headers
 from datetime import timedelta
 from dotenv import load_dotenv
 import dj_database_url
+import django_heroku
 
 
 # Load environment variables from .env file
@@ -13,10 +14,10 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6kezwef2vbysnd16gogi8r+qws-ab%a9o)f)*5ob+8zryw$hrr'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-6kezwef2vbysnd16gogi8r+qws-ab%a9o)f)*5ob+8zryw$hrr')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
     'orders',
     'users',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,6 +85,7 @@ DATABASES = {
     'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
+
 #DATABASES = {
    # 'default': {
        # 'ENGINE': 'django.db.backends.mysql',
@@ -95,14 +98,14 @@ DATABASES = {
 #}
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-ALLOWED_HOSTS = ["cecil254.pythonanywhere.com"
-]
-
-
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'content-type',
 ]
+
+
+
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -153,7 +156,12 @@ USE_TZ = True
 #STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 #STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+django_heroku.settings(locals())
 
 
 #MEDIA_URL = '/media/'
@@ -180,6 +188,3 @@ LOGGING = {
         'level': 'WARNING',
     },
 }
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-django_heroku.settings(locals())
