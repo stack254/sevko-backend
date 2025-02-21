@@ -85,7 +85,6 @@ DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
         conn_max_age=600,
-        ssl_require=True
     )
 }
 
@@ -194,5 +193,8 @@ LOGGING = {
 }
 
 
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
-DATABASES['default'].update(db_from_env)
+if DATABASE_URL := os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    # Add SSL configuration only if not running locally
+    if 'localhost' not in DATABASES['default']['HOST']:
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
