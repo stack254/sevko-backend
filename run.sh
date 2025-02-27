@@ -1,3 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
-gunicorn project.wsgi --log-file-
+
+# Start Gunicorn
+gunicorn markdcommerce.wsgi:application --bind 0.0.0.0:$PORT
