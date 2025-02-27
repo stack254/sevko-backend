@@ -77,20 +77,7 @@ DATABASES = {
 }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = DEBUG
-
-if not DEBUG:
-    CORS_ALLOWED_ORIGINS = [
-        "https://sevko-backend.onrender.com",
-        "https://sevko-frontend.vercel.app",
-        # Add any other production URLs here
-    ]
-else:
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:5173",
-        "http://127.0.0.1:8000",
-        "http://127.0.0.1:5173",
-    ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://sevko-backend.onrender.com",
@@ -173,10 +160,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Media files
 
 # Security settings for production
 if not DEBUG:
