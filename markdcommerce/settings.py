@@ -4,8 +4,6 @@ from corsheaders.defaults import default_headers
 from datetime import timedelta
 from dotenv import load_dotenv
 import dj_database_url
-import django_heroku
-
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,7 +17,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-6kezwef2vbysnd16gogi8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', 'sevko-backend.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -36,7 +34,6 @@ INSTALLED_APPS = [
     'orders',
     'users',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -71,17 +68,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'markdcommerce.wsgi.application'
 
-# Database
-#DATABASES = {
-   # 'default': {
-    #    'ENGINE': 'django.db.backends.postgresql',
-       # 'NAME': os.environ.get('DB_NAME'),
-       # 'USER': os.environ.get('DB_USER'),
-       # 'PASSWORD': os.environ.get('DB_PASSWORD'),
-       # 'HOST': os.environ.get('DB_HOST'),
-       # 'PORT': os.environ.get('DB_PORT'),
-   # }
-#}
+# Database configuration for Render
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
@@ -89,28 +76,15 @@ DATABASES = {
     )
 }
 
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = False
 
-#DATABASES = {
-   # 'default': {
-       # 'ENGINE': 'django.db.backends.mysql',
-        #'NAME': 'cecil254$default',
-        #'USER': 'cecil254',
-       # 'PASSWORD': 'Inara@2023',
-       # 'HOST': 'cecil254.mysql.pythonanywhere-services.com',
-
-   # }
-#}
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'content-type',
-]
 CORS_ALLOWED_ORIGINS = [
+    "https://sevko-backend.onrender.com",
+    "https://sevko-frontend.vercel.app",  # Add your frontend URL here
     "http://localhost:5173",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:5173",
-    # Add any other origins you need
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -124,7 +98,7 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-CORS_ALLOW_HEADERS = [
+CORS_ALLOW_HEADERS = list(default_headers) + [
     'accept',
     'accept-encoding',
     'authorization',
@@ -136,9 +110,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-
-
-
+# REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -171,8 +143,8 @@ SIMPLE_JWT = {
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SELLER_EMAIL = os.environ.get('SELLER_EMAIL')
@@ -184,24 +156,23 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-#STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-django_heroku.settings(locals())
-
-
-#MEDIA_URL = '/media/'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR,'media'))
-
+# Media files
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
+
+# Security settings for production
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -217,13 +188,14 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'WARNING',
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
 
-
-if DATABASE_URL := os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-    # Add SSL configuration only if not running locally
-    if 'localhost' not in DATABASES['default']['HOST']:
-        DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
