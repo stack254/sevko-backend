@@ -1,1 +1,1 @@
-web: gunicorn markdcommerce.wsgi
+web: gunicorn markdcommerce.wsgi:application
