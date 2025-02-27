@@ -1,8 +1,15 @@
-echo #!/usr/bin/env bash > build.sh
-echo # exit on error >> build.sh
-echo set -o errexit >> build.sh
-echo. >> build.sh
-echo pip install -r requirements.txt >> build.sh
-echo. >> build.sh
-echo python manage.py collectstatic --no-input >> build.sh
-echo python manage.py migrate >> build.sh
+#!/usr/bin/env bash
+# exit on error
+set -o errexit
+
+echo "Installing dependencies..."
+pip install -r requirements.txt
+
+echo "Collecting static files..."
+python manage.py collectstatic --no-input
+
+echo "Running migrations..."
+python manage.py migrate
+
+echo "Creating superuser..."
+python create_superuser.py
