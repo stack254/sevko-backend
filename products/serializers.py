@@ -27,7 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'category', 'image']
+        fields = ['id', 'name', 'description', 'price', 'category', 'image', 'stock']
 
 
 
@@ -53,18 +53,21 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
+    subtotal = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    
     
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'quantity']
+        fields = ['id', 'product', 'quantity', 'subtotal']
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
     total = serializers.SerializerMethodField()
+    item_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'items', 'total']
+        fields = ['id', 'items', 'total', 'item_count' ]
 
     def get_total(self, obj):
         return sum(item.product.price * item.quantity for item in obj.items.all())
