@@ -22,13 +22,16 @@ class CategorySerializer(serializers.ModelSerializer):
         if instance.parent is not None:
             representation.pop('subcategories', None)
         return representation
+
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'category', 'image', 'stock', 'cloudinary_image']
+        fields = ['id', 'name', 'description', 'price', 'category', 'stock', 'image', 'image_url', 'cloudinary_image']
 
+    def get_image_url(self, obj):
+        return obj.get_image_url
 
 
 class UserSerializer(serializers.ModelSerializer):

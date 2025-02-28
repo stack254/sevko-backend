@@ -225,7 +225,7 @@ cloudinary.config(
     api_key=os.environ.get('CLOUDINARY_API_KEY'),
     api_secret=os.environ.get('CLOUDINARY_API_SECRET')
 )
-
+USE_CLOUDINARY = os.environ.get('USE_CLOUDINARY', 'False') == 'True'
 # Use Cloudinary storage for both development and production
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
