@@ -204,35 +204,38 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SELLER_EMAIL = os.environ.get('SELLER_EMAIL')
 
-# Static and Media files configuration
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 USE_CLOUDINARY = os.environ.get('USE_CLOUDINARY', 'False').lower() == 'true'
 
-if USE_CLOUDINARY:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-else:
+if ENVIRONMENT == 'development':
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+else:
+    if USE_CLOUDINARY:
+        DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+        CLOUDINARY_STORAGE = {
+            'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
+        }
+    else:
+        # If not using Cloudinary in production, you might want to set up a different storage backend
+        # For now, we'll use the same setup as development
+        MEDIA_URL = '/media/'
+        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+        DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-# Cloudinary configuration
+    # Add WhiteNoise for static files in production
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Cloudinary configuration (keep this part unchanged)
 cloudinary.config( 
   cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"), 
   api_key = os.getenv("CLOUDINARY_API_KEY"), 
   api_secret = os.getenv("CLOUDINARY_API_SECRET")
 )
-
-MEDIA_URL = '/media/'
-if ENVIRONMENT == 'development':
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-else:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE = {
-        'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
-    }
-    # Add WhiteNoise for static files in production
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
