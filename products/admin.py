@@ -11,6 +11,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'category', 'stock', 'created_at', 'updated_at']
     list_filter = ['category', 'created_at', 'updated_at']
     search_fields = ['name', 'description']
+    fields = ('name', 'description', 'price', 'category', 'stock', 'image', 'cloudinary_image')
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
