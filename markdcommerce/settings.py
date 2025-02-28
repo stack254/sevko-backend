@@ -29,6 +29,7 @@ else:
     DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', 'sevko-backend.onrender.com', '*']
+CSRF_TRUSTED_ORIGINS = ["https://shop-frontend-vert.vercel.app/"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -220,13 +221,12 @@ else:
 
 
 # Cloudinary configuration
-cloudinary.config(
-    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key=os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret=os.environ.get('CLOUDINARY_API_SECRET')
+cloudinary.config( 
+  cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"), 
+  api_key = os.getenv("CLOUDINARY_API_KEY"), 
+  api_secret = os.getenv("CLOUDINARY_API_SECRET")
 )
-USE_CLOUDINARY = os.environ.get('USE_CLOUDINARY', 'False') == 'True'
-# Use Cloudinary storage for both development and production
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
