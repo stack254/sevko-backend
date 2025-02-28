@@ -5,9 +5,11 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import dj_database_url
 
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+from environ import Env
+env = Env()
+Env.read_env()
+
+ENVIRONMENT = env('ENVIRONMENT', default='production')
 
 # Load environment variables from .env file
 load_dotenv()
@@ -16,12 +18,16 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-6kezwef2vbysnd16gogi8r+qws-ab%a9o)f)*5ob+8zryw$hrr')
+SECRET_KEY = env('SECRET_KEY')
+if ENVIRONMENT == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', 'sevko-backend.onrender.com']
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', 'sevko-backend.onrender.com', '*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -180,50 +186,24 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SELLER_EMAIL = os.environ.get('SELLER_EMAIL')
 
-# Cloudinary settings
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
+
 
 # Static and Media files configuration
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# Configure storage based on environment
-# Configure storage based on environment
-if DEBUG:
-    # Development settings (local)
-    MEDIA_URL = '/media/'
-    STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+if ENVIRONMENT == 'development':
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 else:
-    # Production settings (Cloudinary)
-    CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
-    STATIC_URL = '/static/'
-    STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
-    MEDIA_URL = '/media/'
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    
-    # Ensure admin static files are included
-    ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
-
-# Security settings for production
-if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    CLOUDINARY_STORAGE = {
+        'CLOUDINARY_URL': env('CLOUDINARY_URL')
+    }
+    # Add WhiteNoise for static files in production
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
