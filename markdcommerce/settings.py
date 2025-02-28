@@ -82,7 +82,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'markdcommerce.wsgi.application'
 
-# Database configuration
+if ENVIRONMENT == 'development':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+from django.core.exceptions import ImproperlyConfigured
+
 if ENVIRONMENT == 'development':
     DATABASES = {
         'default': {
@@ -92,11 +100,14 @@ if ENVIRONMENT == 'development':
     }
 else:
     import dj_database_url
-    DATABASES={
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL')
-        )
-    }
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url:
+        DATABASES = {
+            'default': dj_database_url.config(default=database_url, conn_max_age=600)
+        }
+    else:
+        raise ImproperlyConfigured("DATABASE_URL environment variable is not set.")
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
