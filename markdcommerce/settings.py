@@ -2,30 +2,26 @@ import os
 from pathlib import Path
 from corsheaders.defaults import default_headers
 from datetime import timedelta
-from dotenv import load_dotenv
 import dj_database_url
 
-from environ import Env
-env = Env()
-Env.read_env()
-
-ENVIRONMENT = env('ENVIRONMENT', default='production')
-
-# Load environment variables from .env file
+# Load environment variables
+from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Environment settings
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'production')
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-for-development')
+
+# SECURITY WARNING: don't run with debug turned on in production!
 if ENVIRONMENT == 'development':
     DEBUG = True
 else:
     DEBUG = False
-
-# SECURITY WARNING: don't run with debug turned on in production!
-
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', 'sevko-backend.onrender.com', '*']
 
@@ -186,8 +182,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SELLER_EMAIL = os.environ.get('SELLER_EMAIL')
 
-
-
 # Static and Media files configuration
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -199,11 +193,10 @@ if ENVIRONMENT == 'development':
 else:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     CLOUDINARY_STORAGE = {
-        'CLOUDINARY_URL': env('CLOUDINARY_URL')
+        'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
     }
     # Add WhiteNoise for static files in production
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
