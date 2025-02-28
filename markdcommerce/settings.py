@@ -191,6 +191,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 if DEBUG:
     # Development settings (local)
     MEDIA_URL = '/media/'
+    STATIC_URL = '/static/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
