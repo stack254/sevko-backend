@@ -188,6 +188,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Configure storage based on environment
+# Configure storage based on environment
 if DEBUG:
     # Development settings (local)
     MEDIA_URL = '/media/'
@@ -197,9 +198,14 @@ if DEBUG:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 else:
     # Production settings (Cloudinary)
+    CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
+    STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
     MEDIA_URL = '/media/'
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    
+    # Ensure admin static files are included
+    ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Security settings for production
 if not DEBUG:
