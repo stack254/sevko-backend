@@ -88,15 +88,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'markdcommerce.wsgi.application'
 
-if ENVIRONMENT == 'development':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
-from django.core.exceptions import ImproperlyConfigured
-
+# Database configuration
+# Use SQLite for development and DATABASE_URL for production
 if ENVIRONMENT == 'development':
     DATABASES = {
         'default': {
@@ -105,15 +98,19 @@ if ENVIRONMENT == 'development':
         }
     }
 else:
-    import dj_database_url
     database_url = os.environ.get('DATABASE_URL')
     if database_url:
         DATABASES = {
             'default': dj_database_url.config(default=database_url, conn_max_age=600)
         }
     else:
-        raise ImproperlyConfigured("DATABASE_URL environment variable is not set.")
-
+        # Fallback to SQLite if no DATABASE_URL is provided
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
+        }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -219,15 +216,12 @@ if USE_CLOUDINARY:
 else:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-
 # Cloudinary configuration
 cloudinary.config( 
   cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"), 
   api_key = os.getenv("CLOUDINARY_API_KEY"), 
   api_secret = os.getenv("CLOUDINARY_API_SECRET")
 )
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
 if ENVIRONMENT == 'development':
