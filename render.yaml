@@ -18,3 +18,8 @@ databases:
   - name: markdcommerce_db
     databaseName: markdcommerce
     user: markdcommerce
+
+disks:
+  - name: markdcommerce_data
+    mountPath: /data
+    sizeGB: 10
