@@ -23,14 +23,11 @@ class CategorySerializer(serializers.ModelSerializer):
             representation.pop('subcategories', None)
         return representation
 class ProductSerializer(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
+    category = CategorySerializer(read_only=True)
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'image_url', 'category', 'stock', 'created_at', 'updated_at']
-
-    def get_image_url(self, obj):
-        return obj.get_image_url
+        fields = ['id', 'name', 'description', 'price', 'category', 'image', 'stock', 'cloudinary_image']
 
 
 
