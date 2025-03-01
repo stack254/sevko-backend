@@ -27,9 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields ='__all__'
-
-
+        fields = '__all__'  # Fixed the syntax error here
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

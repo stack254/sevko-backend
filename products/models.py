@@ -57,7 +57,7 @@ class OrderItem(models.Model):
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     session_id = models.CharField(max_length=100, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
@@ -77,7 +77,7 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    created_at = models.DateTimeField(default=timezone.now())
+    created_at = models.DateTimeField(default=timezone.now)  # Changed this line
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
@@ -89,4 +89,4 @@ class CartItem(models.Model):
     @property
     def subtotal(self):
         """Calculate the subtotal for this item"""
-        return self.product.price * self.quantity 
+        return self.product.price * self.quantity

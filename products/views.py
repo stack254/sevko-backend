@@ -261,24 +261,28 @@ class ProductList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Product.objects.all()
-
+        
+        # Category filter
         if category := self.request.query_params.get('category'):
             category_ids = category.split(',')
             queryset = queryset.filter(category__id__in=category_ids)
-
+        
+        # Price range filter
         if min_price := self.request.query_params.get('min_price'):
             queryset = queryset.filter(price__gte=min_price)
-
         if max_price := self.request.query_params.get('max_price'):
             queryset = queryset.filter(price__lte=max_price)
-
+        
+        # Search filter
         if search := self.request.query_params.get('search'):
             queryset = queryset.filter(name__icontains=search)
-
+        
+        # Ordering
         if ordering := self.request.query_params.get('ordering'):
             queryset = queryset.order_by(ordering)
-
+        
         return queryset
+
     
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
