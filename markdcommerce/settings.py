@@ -12,12 +12,12 @@ SECRET_KEY = 'django-insecure-6kezwef2vbysnd16gogi8r+qws-ab%a9o)f)*5ob+8zryw$hrr
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sevko-backend.onrender.com', 'localhost', '127.0.0.1']
 CORS_ALLOW_ALL_ORIGINS = False  # Don't allow all origins in production
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Your frontend development server
     "http://127.0.0.1:5173",
+    "https://sevko-backend.onrender.com"
     # Add any other origins you need, like your production frontend URL
 ]
 
