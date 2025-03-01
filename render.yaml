@@ -1,24 +1,26 @@
+
+databases:
+  - name: mysitedb
+    plan: free
+    databaseName: sevkoSQL
+    user: sevkosql_user
+
 services:
   - type: web
-    name: markdcommerce
-    env: python
+    plan: free
+    name: mysite
+    runtime: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn markdcommerce.wsgi:application"
+    startCommand: "python -m gunicorn markdcommerce.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: markdcommerce_db
+          name: mysitedb
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
-
-databases:
-  - name: markdcommerce_db
-    databaseName: markdcommerce
-    user: markdcommerce
-
 disks:
   - name: markdcommerce_data
     mountPath: /data
