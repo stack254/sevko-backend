@@ -15,10 +15,12 @@ DEBUG = True
 ALLOWED_HOSTS = ['sevko-backend.onrender.com', 'localhost', '127.0.0.1']
 CORS_ALLOW_ALL_ORIGINS = False  # Don't allow all origins in production
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Your frontend development server
+    "https://sevko-backend.onrender.com",
+    "https://sevko-frontend.vercel.app",
+    "https://shop-frontend-vert.vercel.app",  # Add this line
+    "http://localhost:5173",
+    "http://127.0.0.1:8000",
     "http://127.0.0.1:5173",
-    "https://sevko-backend.onrender.com"
-    # Add any other origins you need, like your production frontend URL
 ]
 
 CORS_ALLOW_CREDENTIALS = True
