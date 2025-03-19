@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'users',
+    'payments',
+    'paystack',
 ]
 
 MIDDLEWARE = [
@@ -111,6 +113,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+# Add Paystack settings
+PAYSTACK_PUBLIC_KEY = 'pk_live_054f2e8aef1991bd3e60f39c858be6563400cda2'
+PAYSTACK_SECRET_KEY = 'sk_live_a4393a9aad871ed2e738128806e2c757fed05a42'
+PAYSTACK_CALLBACK_URL = 'http://localhost:8000/paystack/callback/'
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
